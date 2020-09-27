@@ -89,11 +89,8 @@ function filter() { //this does the actual filtering.
     sender = message.getFrom();
     email = sender.split("<")[1];
     
-    if (email === undefined) {
-      email = sender;
-    } else {
-      email = email.split(">")[0];
-    }
+    if (email === undefined) {email = sender;} 
+    else {email = email.split(">")[0];}
     
     //checks given email against all user given emails 
     for (x=0; x<given_emails.length; x++) {
