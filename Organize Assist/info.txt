@@ -1,4 +1,6 @@
-This program is an all-around go-to script for organizing your GMail account. 
+"Organize Assist"
+
+This program is an all-around go-to script for organizing your GMail account. The process is completely automated, once set up.
 
 Functions (as of 1.2):
   > Create folders for multiple email addresses.
