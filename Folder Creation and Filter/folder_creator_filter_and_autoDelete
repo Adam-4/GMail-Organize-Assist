@@ -1,0 +1,170 @@
+                                                                                                                                                      /*
+
+.---------------------- How To Use -----------------------.
+| * Only user_input (array) needs to be manipulated. *    |
+|                                                         |
+| > Folders (labels) are items in the array.              |
+|                                                         |
+| > If you want multiple senders in a folder,             |
+|   separate email addresses by commas (no extra spacing) |
+|   in an item.                                           |
+|                                                         |
+| > Custom name for folder should be second to last item  |
+|    in array.                                            |    
+|                                                         |
+|  > Last item in array is time in days before deletion   |
+|    of emails in folder. If you do not want this feature,|
+|    list no final parameter.                             |
+|                                                         |
+|  > "[email],[email],[label],[cut-off #]"                |
+'---------------------------------------------------------'
+                                                                                                                                                      */
+//Cut-off below is ten days:
+var user_input = ["randomemail@gmail.com,MyLabelName,10"];
+
+var given_emails = [];
+var labels = [];
+var cut_offs = [];
+
+
+//This is a good routine (select this function for your trigger):
+function run() {
+  synthesize_data();
+  make_labels();
+  filter();
+  delete_old_emails();
+}
+
+function synthesize_data() {
+  for (x=0; x<user_input.length; x++) { // cycles through each item in user list, or each "folder"
+    
+    var folder = user_input[x].split(",");
+    var label_location = folder.length-2
+    var cut_off_location = folder.length-1
+    cut_offs[x] = parseInt(folder[cut_off_location],10);
+    var only_emails = "";
+    
+    if (folder[label_location].search("@") == -1) { // if user provided label
+      labels[x] = folder[label_location]; //second to last item in split string (array)
+    } else {
+      Logger.log("Bad syntax.");
+      return "Bad syntax.";
+    }
+    
+    folder.pop(); folder.pop();
+    
+    for (i=0; i<folder.length; i++) {
+      if (i != folder.length-1) {
+        only_emails = only_emails + folder[i] + ",";
+      } else {
+        only_emails = only_emails + folder[i];
+      }
+    }
+    
+    given_emails[x] = only_emails;
+    
+  }
+  
+  /*
+  If you want to see your data spliced up:
+  
+  Logger.log("Email input: " + given_emails);
+  Logger.log("User labels: " + labels);
+  Logger.log("Cut-offs: " + cut_offs);
+  */
+  
+}
+
+
+// makes a bunch of labels (based on strings in newly created label array)
+function make_labels() {
+  for (i=0; i<labels.length; i++) {
+    GmailApp.createLabel(labels[i]);
+  }
+}
+
+function filter() {
+    var all_threads = GmailApp.getInboxThreads();
+    var thread;
+    var messages;
+    var specific_message;
+    var sender;
+    var email;
+    var label;
+  
+  for (i=0; i<all_threads.length; i++) { // Master Loop here (filter loop), works just like one in synthesize_data()
+    
+    //combing process
+    thread = all_threads[i];
+    messages = thread.getMessages();
+    
+    for (msgCounter=0; msgCounter<messages.length; msgCounter++) {
+      specific_message = messages[msgCounter];
+    
+      sender = specific_message.getFrom();
+      email = sender.split("<")[1];
+      
+      if (email === undefined) {email = sender;} 
+      else {email = email.split(">")[0];}
+
+      //checks given email against all user given emails 
+      for (x=0; x<given_emails.length; x++) {
+      
+        var emails_in_folder = given_emails[x].split(",");
+      
+        for (a=0; a<emails_in_folder.length; a++) {
+          if (email == emails_in_folder[a]) {
+            label = GmailApp.getUserLabelByName(labels[x]);
+            label.addToThread(thread);
+            thread.moveToArchive();
+            break;
+          }
+        
+        }
+      
+      }
+    
+    }
+  
+  }
+  
+}
+
+/*     
+   For every user_label  
+   
+   1. get threads under label
+   2. if date > user cut-off, delete  
+*/
+
+function delete_old_emails () {
+  var label;
+  var label_threads;
+  var date = new Date().getTime();
+  
+  
+  for (i=0; i<labels.length; i++) {
+    label = GmailApp.getUserLabelByName(labels[i]);
+    label_threads = label.getThreads();
+    
+    var thread_date;
+    var ind_thread;
+    var age;
+    var cut_off_mili = cut_offs[i]*86400000;
+    
+    for (x=0; x<label_threads.length; x++) {
+      ind_thread = label_threads[x];
+      thread_date = ind_thread.getLastMessageDate().getTime();
+      age = date - thread_date;
+      
+      if (age>cut_off_mili) {
+        ind_thread.removeLabel(label);
+        ind_thread.moveToTrash();
+      }
+      
+    }
+    
+  }
+  
+}
+
