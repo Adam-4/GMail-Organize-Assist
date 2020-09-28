@@ -1,8 +1,13 @@
 This program is an all-around go-to script for organizing your GMail account. 
 
-Functions (as of 1.3):
+Functions (as of 1.2):
   > Create folders for multiple email addresses.
   > Automatically sort emails into folders.
   > Automatically delete old emails. 
 
 Older scripts are kept for reference.
+
+History
+[1.0] - Folder creation and basic filtering
+[1.1] - Folder creation and more extensive filtering
+[1.2] - 'Auto-delete' functionality
