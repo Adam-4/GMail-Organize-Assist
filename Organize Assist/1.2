@@ -1,4 +1,4 @@
-                                                                                                                                                      /*
+                                                                                                                                                      /*                                                                                                                                                      /*
 
 .---------------------- How To Use -----------------------.
 | * Only user_input (array) needs to be manipulated. *    |
@@ -19,8 +19,13 @@
 |  > "[email],[email],[label],[cut-off #]"                |
 '---------------------------------------------------------'
                                                                                                                                                       */
-//Cut-off below is ten days:
-var user_input = ["randomemail@gmail.com,MyLabelName,10"];
+var user_input = ["mailman@finalforms.com,FinalForms,7",
+                  "mwwotd@wotd.m-w.com,Word of the Day,7",
+                  "jantzri@delawarecityschools.net,lemkest@delawarecityschools.net,luksicde@delawarecityschools.net,montgopa@delawarecityschools.net,waselkka@delawarecityschools.net,meyerjo@delawarecityschools.net,shermaaa@delawarecityschools.net,Teachers",
+                  "joel@sitepoint.com,support@sitepoint.com,dianne.pena@sitepoint.com,michael@programmingelectronics.com,Tech,7",
+                  "updates@academia-mail.com,Academia,12",
+                  "nytdirect@nytimes.com,editor@theflipside.io,News,12"
+                 ];
 
 var given_emails = [];
 var labels = [];
@@ -39,13 +44,22 @@ function synthesize_data() {
   for (x=0; x<user_input.length; x++) { // cycles through each item in user list, or each "folder"
     
     var folder = user_input[x].split(",");
-    var label_location = folder.length-2
+    var label_location;
     var cut_off_location = folder.length-1
-    cut_offs[x] = parseInt(folder[cut_off_location],10);
+    var last_item_num = parseInt(folder[cut_off_location],10);
     var only_emails = "";
     
+    if (isNaN(last_item_num)) {
+      cut_offs[x] = "noDelete";
+      label_location = folder.length-1;
+    } else {
+      cut_offs[x] = last_item_num;
+      label_location = folder.length-2
+      
+    }
+    
     if (folder[label_location].search("@") == -1) { // if user provided label
-      labels[x] = folder[label_location]; //second to last item in split string (array)
+      labels[x] = folder[label_location]; //label
     } else {
       Logger.log("Bad syntax.");
       return "Bad syntax.";
@@ -65,13 +79,17 @@ function synthesize_data() {
     
   }
   
+  
   /*
+  
   If you want to see your data spliced up:
   
   Logger.log("Email input: " + given_emails);
   Logger.log("User labels: " + labels);
   Logger.log("Cut-offs: " + cut_offs);
+  
   */
+  
   
 }
 
@@ -109,7 +127,6 @@ function filter() {
 
       //checks given email against all user given emails 
       for (x=0; x<given_emails.length; x++) {
-      
         var emails_in_folder = given_emails[x].split(",");
       
         for (a=0; a<emails_in_folder.length; a++) {
@@ -135,6 +152,7 @@ function filter() {
    
    1. get threads under label
    2. if date > user cut-off, delete  
+   
 */
 
 function delete_old_emails () {
@@ -153,6 +171,8 @@ function delete_old_emails () {
     var cut_off_mili = cut_offs[i]*86400000;
     
     for (x=0; x<label_threads.length; x++) {
+      if (cut_offs[i] == "noDelete") {break;} //if user didn't specify time
+      
       ind_thread = label_threads[x];
       thread_date = ind_thread.getLastMessageDate().getTime();
       age = date - thread_date;
