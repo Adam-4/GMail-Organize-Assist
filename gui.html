@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Example: <i class="material-icons">folder</i> -->
+    
+    <base target="_top">
+    <style>
+    
+    body {
+      margin: 0;
+    }
+    
+    #title_bar {
+      margin: 0; 
+      background-color: white;
+      font-family:'Roboto';
+      font-size: 25px;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid lightgrey;
+      padding-bottom: 15px;
+      padding-top: 15px;
+      padding-left: 15px;
+      margin-bottom: 0;
+      opacity: .5;
+      transition-duration: .5s;
+    }
+    
+    #logo {
+      padding-right: 15px;
+      margin-left: 15px;
+    }
+    
+    #finish_button {
+      color: #333333;
+    }
+    
+    #container {
+      height: 85vh; 
+      width: 100vw; 
+      position: relative;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+    
+    #popup {
+      width: 50%; 
+      height: 50%; 
+      background-color: white;
+      border: 2px solid lightgrey;
+      border-radius: 10px;
+      opacity: 1;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: absolute;
+      left: 25%;
+      top: 25%;
+      z-index: 1;
+      
+    }
+    
+    #popup_title {
+      margin: 0; 
+      text-align: center;
+      background-color: white;
+      font-family:'Roboto';
+      font-size: 20px;
+      color: #333333;
+      border-bottom: 3px solid lightgrey;
+      padding-bottom: 15px;
+      padding-top: 15px;
+      margin-bottom: 50px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex; 
+      align-items: center;
+      padding-left: 15px;
+    }
+    
+    
+    
+    a {
+      text-decoration: none;
+    }
+    
+    #txt {
+      font-family:'Roboto';
+      font-size: 15px;
+      color: #333333;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-bottom: 15px;
+      
+    }
+    
+    .icon:hover {
+      opacity: .7;
+      cursor: pointer;
+    }
+    
+   
+    
+    .icon {
+      width: 25px;
+      height: auto;
+      opacity: .4;
+      margin-left: auto;
+      margin-right: 25px;
+      transition-duration: .5s;
+    }
+    
+    .folder_icon {
+      opacity: .3;
+      width: 25px;
+      align-self: center;
+      margin-right: 2vw;
+      transition-duration: .05s;
+      cursor: pointer;
+    }
+    
+    #create_trigger_txt {
+      align-self: center;
+      font-family:'Roboto';
+      font-size: 20px;
+      color: #333333;
+    }
+    
+    .folder_box {
+      background-color: white;
+      
+      /*for other blue: rgb(185, 203, 203);*/
+      
+      width: 100%;
+      height: 15%;
+      
+      display: flex;
+      align-content: center;
+      padding-left: 2vw;
+      
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    
+    
+    
+    #trigger_box {
+      display: flex;
+      justify-content: center;
+      background-color: white;
+      width: 20%;
+      height: 40px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      border-left: 1px solid grey;
+      border-right: 1px solid grey;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    
+     #trigger_box:hover {
+      cursor: pointer;
+     }
+    
+    .row_box {
+      border-bottom: 1px solid lightgrey;
+      border-top: 1px solid lightgrey;
+      
+      margin-bottom: -1px;
+      height: 15%;
+      opacity: .5;
+      transition-duration: .5s;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    
+    
+    
+    /* Merge input and delete folder into one class: folderchildren */
+    
+    
+    
+    .material-icons.md-36 { font-size: 36px; }
+    
+    .folder_button {
+      border: none;
+      font-family:'Roboto';
+      height: 50%;
+      border-radius: 10px;
+      margin-left: 15px;
+      margin-right: 15px;
+      padding-left: 30px;
+      padding-right: 30px;
+      align-self: center;
+      color: white;
+      min-height: 30px;
+      cursor: pointer;
+    }
+    
+    input {
+      height: 50%;
+      margin-left: 15px;
+      margin-right: 15px;
+      padding-left: 15px;
+      padding-right: 15px;
+      background-color: white;
+      font-family:'Roboto';
+      border-radius: 10px;
+      color: black;
+      border: 1px solid lightgrey;
+      align-self: center;
+      min-height: 30px;
+      
+      transition-duration: .5s;
+    }
+    
+    .delete_button {
+      background-color: #e06f65;
+    }
+    
+    .finish_button {
+      background-color: lightgrey;
+      color: #333333;
+    }
+    
+    #control_bar {
+      bottom: 0;
+      left: 0
+      position: fixed;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      padding-bottom: 50px;
+      padding-top: 50px;
+      background-color: white;
+      height: 20%;
+      border-top: 2px solid lightgrey;
+      border-bottom: 3px solid lightgrey;
+      margin-bottom: -1px;
+      opacity: .5;
+      transition-duration: .5s;
+      background-image: url("https://www.publicdomainpictures.net/pictures/300000/velka/abstract-wallpaper-15572324177B2.jpg");
+    }
+
+    .control_button {
+      height: 100px;
+      width: 100px;
+      background-color: white;
+      border: 0px solid lightgrey;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      transition-duration: .5s;
+      box-shadow: 3px 5px 20px 3px grey;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    
+    .control_button:hover {
+      box-shadow: 3px 5px 10px 3px #333333;
+    }
+    
+    #plus_text {
+      align-self: center;
+      font-family:'Roboto';
+      font-size: 50px;
+      color: grey;
+      font-weight: bold;
+    }
+    
+    #initial_folder {
+      display: none;
+    }
+    
+    .email_paragraph {
+      display: none;
+    }
+    
+    .see_emails_button {
+      background-color: lightgrey;
+      color: #333333;
+    }
+    
+    
+    </style>
+  </head>
+  
+    
+  <body>
+  
+    <h1 id="title_bar">
+      <img id="logo" height="30px" width="auto" draggable="false" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/New_Logo_Gmail.svg/634px-New_Logo_Gmail.svg.png">
+      Gmail Organize
+      <button class="folder_button" id="finish_button">Finish</button>
+      <img onclick="popup(2);" draggable="false" id="help" class="icon" align="right" src="https://www.civhc.org/wp-content/uploads/2018/10/question-mark.png">
+    </h1>
+    
+    
+    <div id="container">
+    
+      <div class="folder_box row_box" id="initial_folder" onclick="highlight()">
+        <i class="folder_icon material-icons md-36" draggable="false" onclick="see_folders(this);">folder</i>
+        <input type="text" class="label_input" placeholder="Name">
+        <input type="text" class="emails_input" placeholder="Email address" onkeydown="addEmail(this);">
+        
+        <p class="email_paragraph"></p>
+        
+        <input type="number" min="0" class="delete_days_input" placeholder="Autodelete days">
+        
+        <button class="folder_button delete_button" onclick="delete_folder(this)">Delete</button>
+        <!--<button class="folder_button see_emails_button" onclick="see_emails(this)">See Emails</button> -->
+        <button class="folder_button finish_button" onclick="add_folder(this)">Add to Queue</button>
+      </div>
+      
+      
+      
+      <!-- <div id="trigger_box" class="row_box">
+        <p id="create_trigger_txt">Create Trigger</p>
+      </div> -->
+    
+      <div id="popup">
+        <h1 id="popup_title">Let's get you started!<img onclick="popup(1);" draggable="false" class="icon" id="close" src="data:image/png;base64,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"></h1>
+          <div id="txt">This program is designed to automatically tidy up your Gmail inbox. This is done by creating folders in which emails are sorted. You'll need to specify the names of these folders and other information. After that, create a trigger that will run the program automatically. You can view the source code at this project's <a href="https://github.com/Adam-4/GMail-Organize-Assist/tree/master/Organize%20Assist">github repository.</a></div>
+      </div>
+      
+      <!-- <div id="email_popup" style="display: none;">
+        <h1 id="email_popup_title">Let's get you started!<img onclick="popup(1,this);" draggable="false" class="icon" id="close" src="data:image/png;base64,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"></h1>
+          <div id="email_txt">This program is designed to automatically tidy up your Gmail inbox. This is done by creating folders in which emails are sorted. You'll need to specify the names of these folders and other information. After that, create a trigger that will run the program automatically. You can view the source code at this project's <a href="https://github.com/Adam-4/GMail-Organize-Assist/tree/master/Organize%20Assist">github repository.</a></div>
+      </div> -->
+      
+      <div id="control_bar">
+        <button class="control_button" onclick="create_new_GUI_folder()"><p id="plus_text">+</p></button>
+      </div>
+      
+    </div>
+    
+    <!-- <button onclick="displayinput();">test</button> -->
+    
+    <!-- <button onclick="test();">Test</button> -->
+    
+    <script>
+    
+    /*function displayinput() {
+      alert(user_input[0]);
+    }*/
+    
+    var user_input = [];
+    
+    var GUI_folders;
+    var initial_folder;
+    var folderCount = 1;
+    var clone;
+    var folder_container = document.getElementById("container");
+    
+    function add_folder(element) { //first check to make sure user filled out stuff, also don't add last parameter if no value
+    
+      var given_folder = element.parentNode;
+      
+      var delete_button = getChildByClassName(given_folder, "folder_button delete_button");
+      var finish_button = element;
+      
+      var delete_button_style = window.getComputedStyle(delete_button);
+      var cursor_state = delete_button_style.getPropertyValue("cursor");
+      
+      if (cursor_state == "pointer") {
+      
+        var emails_input = getChildByClassName(given_folder,"emails_input");
+        var label_input = getChildByClassName(given_folder, "label_input");
+        var delete_days_input = getChildByClassName(given_folder, "delete_days_input");
+        var folder_icon = getChildByClassName(given_folder, "folder_icon material-icons md-36");
+        
+        var emails = getChildByClassName(given_folder, "email_paragraph").innerHTML;
+        var label = label_input.value;
+        var cut_off = delete_days_input.value;
+        
+        var folder_item = emails + label + "," + cut_off;
+        
+        user_input.push(folder_item);
+        emails_input.disabled = true;
+        label_input.disabled = true;
+        delete_days_input.disabled = true;
+        
+        emails_input.style.backgroundColor = "#f5f5f5";
+        label_input.style.backgroundColor = "#f5f5f5";
+        delete_days_input.style.backgroundColor = "#f5f5f5";
+        
+        delete_button.style.cursor = "not-allowed";
+        finish_button.style.cursor = "not-allowed";
+        
+        finish_button.innerHTML = "Added";
+        folder_icon.innerHTML = "https";
+        
+      }
+    }
+
+    function popup(toggle) {
+      if (toggle == 1) {
+
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("title_bar").style.opacity = "1";
+        document.getElementById("control_bar").style.opacity = "1";
+        
+        GUI_folders = document.getElementsByClassName("folder_box");
+        
+        for (i=0;i<GUI_folders.length;i++) {
+          GUI_folders[i].style.opacity = "1";
+        }
+        
+        
+        document.getElementById("trigger_box").style.opacity = "1";
+      }
+    
+      if (toggle == 2) {
+        document.getElementById("popup").style.display = "initial";
+        document.getElementById("title_bar").style.opacity = ".5";
+        document.getElementById("control_bar").style.opacity = ".5";
+        
+        GUI_folders = document.getElementsByClassName("folder_box");
+        
+        for (i=0;i<GUI_folders.length;i++) {
+          GUI_folders[i].style.opacity = ".5";
+        }
+        
+        document.getElementById("trigger_box").style.opacity = ".5";
+      }
+    
+    }
+    
+    function see_folders (element) {
+      var given_folder = element.parentNode;
+      var p = getChildByClassName(given_folder,"email_paragraph");
+      var emails = p.innerHTML.split(",");
+      var email_string = "<br><br>";
+      
+      var txt = document.getElementById("email_txt");
+      var title = document.getElementById("email_popup_title");
+      
+      for (i=0;i<emails.length;i++) {
+        email_string = email_string + emails[i] + "<br><br>";
+      }
+      
+      var content = "The emails in this folder are: " + email_string;
+      
+      alert(content);
+      
+      //txt.innerHTML = content;
+      //title.innerHTML = "You have " + emails.length + " emails in this folder";
+      
+      //popup(2,element);
+      
+    }
+    
+    function create_new_GUI_folder() {
+      folderCount++;
+      initial_folder = document.getElementById("initial_folder");
+      clone = initial_folder.cloneNode(true);
+      clone.setAttribute("id",folderCount);
+      folder_container.appendChild(clone);
+    }
+    
+    function delete_folder(element) {
+    
+      var given_folder = element.parentNode;
+      var delete_button = getChildByClassName(given_folder, "folder_button finish_button");
+      
+      var delete_button_style = window.getComputedStyle(delete_button);
+      var cursor_state = delete_button_style.getPropertyValue("cursor");
+      
+      if (cursor_state == "pointer") {
+        folder_container.removeChild(given_folder);
+      }
+    }
+    
+    function addEmail(element) {
+      if (event.key == "Enter") {
+      
+        var given_folder = element.parentNode;
+        var email_text = element.value;
+        var email_text_node;
+        var emails_input = getChildByClassName(given_folder,"emails_input");
+        var folder_icon = getChildByClassName(given_folder, "folder_icon material-icons md-36");
+        var p = getChildByClassName(given_folder, "email_paragraph");
+
+        email_text_node = document.createTextNode(email_text + ",");
+        p.appendChild(email_text_node);
+        
+        //alert(p.innerHTML);
+        pop(folder_icon);
+        emails_input.value = "";
+        
+      }
+    }
+    
+    function getChildByClassName(parent, className) {
+      var children = parent.childNodes;
+      for (i=0;i<children.length;i++) {
+          if (children[i].className == className) {
+            return children[i];
+          }
+       }
+    }
+    
+    function test() {
+      google.script.run.test("I have passed a parameter sucessfully");
+    }
+    
+    function pop(element) {
+      element.style.fontSize = "48px";
+      //element.style.
+      setTimeout(back, 150);
+      function back() {
+        element.style.fontSize = "36px";
+      }
+    }
+    
+    //we can do basic alert/prompt for now to figure it out
+    function finish() {
+      //user sets trigger stuff
+      //create trigger
+    }
+    
+    /*function highlight() {
+      document.getElementById("folder_box").style.border = "5px solid black";
+    }
+    */
+    </script>
+    
+  </body>
+</html>
